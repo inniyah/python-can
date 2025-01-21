@@ -405,9 +405,9 @@ class MF4Reader(BinaryIOMessageReader):
                         and "CAN_ErrorFrame.DataBytes" in names
                     ):
                         data_length = int(data["CAN_ErrorFrame.DataLength"][i])
-                        kv["data"] = data["CAN_ErrorFrame.DataBytes"][i][
+                        kv["data"] = data["CAN_ErrorFrame.DataBytes"][i].tobytes()[
                             :data_length
-                        ].tobytes()
+                        ]
 
                     yield Message(**kv)
 
