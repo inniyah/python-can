@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 This demo creates multiple processes of producers to spam a socketcan bus.
