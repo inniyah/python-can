@@ -3,7 +3,7 @@ Command Line Tools
 
 The following modules are callable from ``python-can``.
 
-They can be called for example by ``python -m can.logger`` or ``can_logger`` (if installed using pip).
+They can be called for example by ``python3 -m can.logger`` or ``can_logger`` (if installed using pip).
 
 can.logger
 ----------
@@ -11,14 +11,14 @@ can.logger
 Command line help, called with ``--help``:
 
 
-.. command-output:: python -m can.logger -h
+.. command-output:: python3 -m can.logger -h
     :shell:
 
 
 can.player
 ----------
 
-.. command-output:: python -m can.player -h
+.. command-output:: python3 -m can.player -h
     :shell:
 
 
@@ -53,12 +53,12 @@ By default the ``can.viewer`` uses the :doc:`/interfaces/socketcan` interface. A
 
 The full usage page can be seen below:
 
-.. command-output:: python -m can.viewer -h
+.. command-output:: python3 -m can.viewer -h
     :shell:
 
 
 can.logconvert
 --------------
 
-.. command-output:: python -m can.logconvert -h
+.. command-output:: python3 -m can.logconvert -h
     :shell:

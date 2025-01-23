@@ -395,7 +395,7 @@ def _parse_viewer_args(
 ) -> Tuple[argparse.Namespace, TDataStructs, TAdditionalCliArgs]:
     # Parse command line arguments
     parser = argparse.ArgumentParser(
-        "python -m can.viewer",
+        "python3 -m can.viewer",
         description="A simple CAN viewer terminal application written in Python",
         epilog="R|Shortcuts: "
         "\n        +---------+-------------------------------+"
@@ -448,7 +448,7 @@ def _parse_viewer_args(
         "\n      q = int64_t, Q = uint64_t"
         "\n      f = float (32-bits), d = double (64-bits)"
         "\nFx to convert six bytes with ID 0x100 into uint8_t, uint16 and uint32_t:"
-        '\n  $ python -m can.viewer -d "100:<BHL"'
+        '\n  $ python3 -m can.viewer -d "100:<BHL"'
         "\nNote that the IDs are always interpreted as hex values."
         "\nAn optional conversion from integers to real units can be given"
         "\nas additional arguments. In order to convert from raw integer"
@@ -457,16 +457,16 @@ def _parse_viewer_args(
         "\nto convert from real units to raw integer values."
         "\nFx lets say the uint8_t needs no conversion, but the uint16 and the uint32_t"
         "\nneeds to be divided by 10 and 100 respectively:"
-        '\n  $ python -m can.viewer -d "101:<BHL:1:10.0:100.0"'
+        '\n  $ python3 -m can.viewer -d "101:<BHL:1:10.0:100.0"'
         "\nBe aware that integer division is performed if the scaling value is an integer."
         "\nMultiple arguments are separated by spaces:"
-        '\n  $ python -m can.viewer -d "100:<BHL" "101:<BHL:1:10.0:100.0"'
+        '\n  $ python3 -m can.viewer -d "100:<BHL" "101:<BHL:1:10.0:100.0"'
         "\nAlternatively a file containing the conversion strings separated by new lines"
         "\ncan be given as input:"
         "\n  $ cat file.txt"
         "\n      100:<BHL"
         "\n      101:<BHL:1:10.0:100.0"
-        "\n  $ python -m can.viewer -d file.txt",
+        "\n  $ python3 -m can.viewer -d file.txt",
         metavar="{<id>:<format>,<id>:<format>:<scaling1>:...:<scalingN>,file.txt}",
         nargs=argparse.ONE_OR_MORE,
         default="",

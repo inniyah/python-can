@@ -97,7 +97,7 @@ def _append_filter_argument(
         "\n      <can_id>~<can_mask> (matches when <received_can_id> & mask !="
         " can_id & mask)"
         "\nFx to show only frames with ID 0x100 to 0x103 and 0x200 to 0x20F:"
-        "\n      python -m can.viewer --filter 100:7FC 200:7F0"
+        "\n      python3 -m can.viewer --filter 100:7FC 200:7F0"
         "\nNote that the ID and mask are always interpreted as hex values",
         metavar="{<can_id>:<can_mask>,<can_id>~<can_mask>}",
         nargs=argparse.ONE_OR_MORE,

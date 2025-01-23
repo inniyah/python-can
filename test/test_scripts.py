@@ -73,7 +73,7 @@ class CanScriptTest(unittest.TestCase, metaclass=ABCMeta):
 class TestLoggerScript(CanScriptTest):
     def _commands(self):
         commands = [
-            "python -m can.logger --help",
+            "python3 -m can.logger --help",
             "can_logger --help",
         ]
         return commands
@@ -87,7 +87,7 @@ class TestLoggerScript(CanScriptTest):
 class TestPlayerScript(CanScriptTest):
     def _commands(self):
         commands = [
-            "python -m can.player --help",
+            "python3 -m can.player --help",
             "can_player --help",
         ]
         return commands
@@ -101,7 +101,7 @@ class TestPlayerScript(CanScriptTest):
 class TestLogconvertScript(CanScriptTest):
     def _commands(self):
         commands = [
-            "python -m can.logconvert --help",
+            "python3 -m can.logconvert --help",
             "can_logconvert --help",
         ]
         return commands
