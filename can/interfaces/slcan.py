@@ -235,6 +235,8 @@ class slcanBus(BusABC):
         remote = False
         extended = False
         data = None
+        is_fd = False
+        bitrate_switch = False
 
         if self._queue.qsize():
             string: Optional[str] = self._queue.get_nowait()
@@ -268,6 +270,22 @@ class slcanBus(BusABC):
             dlc = int(string[9])
             extended = True
             remote = True
+        elif string[0] in ("B", "b", "D", "d"):  # CAN FD frames
+            dlc2len = { 9: 12, 10: 16, 11: 20, 12: 24, 13: 32, 14: 48, 15: 64 }
+            is_fd = True
+            extended = string[0] in ("B", "D")
+            bitrate_switch = string[0] in ("B", "D")
+            if extended:
+                canId = int(string[1:9], 16)
+                dlc = int(string[9], 16)
+                dlc = dlc2len.get(dlc, dlc)
+                data_start = 10
+            else:
+                canId = int(string[1:4], 16)
+                dlc = int(string[4], 16)
+                dlc = dlc2len.get(dlc, dlc)
+                data_start = 5
+            data = bytearray([int(string[data_start + i * 2 : data_start + i * 2 + 2], 16) for i in range(dlc)])
 
         if canId is not None:
             msg = Message(
@@ -275,6 +293,8 @@ class slcanBus(BusABC):
                 is_extended_id=extended,
                 timestamp=time.time(),  # Better than nothing...
                 is_remote_frame=remote,
+                is_fd=is_fd,
+                bitrate_switch=bitrate_switch,
                 dlc=dlc,
                 data=data,
             )
@@ -290,6 +310,15 @@ class slcanBus(BusABC):
             else:
                 sendStr = f"r{msg.arbitration_id:03X}{msg.dlc:d}"
         else:
+          if msg.is_fd:
+                len2dlc = { 12: 9, 16: 10, 20: 11, 24: 12, 32: 13, 48: 14, 64: 15 }
+                if msg.bitrate_switch:  # BRS flag is true
+                    sendStr = "D%08X%d" % (msg.arbitration_id, len2dlc.get(msg.dlc, msg.dlc))
+                elif msg.is_extended_id:
+                    sendStr = "B%08X%d" % (msg.arbitration_id, len2dlc.get(msg.dlc, msg.dlc))
+                else:
+                    sendStr = "t%03X%d" % (msg.arbitration_id, msg.dlc)
+          else:
             if msg.is_extended_id:
                 sendStr = f"T{msg.arbitration_id:08X}{msg.dlc:d}"
             else:
