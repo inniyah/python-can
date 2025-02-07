@@ -291,7 +291,7 @@ class slcanBus(BusABC):
             msg = Message(
                 arbitration_id=canId,
                 is_extended_id=extended,
-                timestamp=time.time(),  # Better than nothing...
+                timestamp=time.monotonic(),  # Better than nothing...
                 is_remote_frame=remote,
                 is_fd=is_fd,
                 bitrate_switch=bitrate_switch,
