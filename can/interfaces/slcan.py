@@ -265,61 +265,108 @@ class slcanBus(BusABC):
         else:
             string = self._read(timeout)
 
+        if string:
+            string = string.strip()
+
         if not string:
             pass
         elif string[0] in (
             "T",
             "x",  # x is an alternative extended message identifier for CANDapter
         ):
-            # extended frame
-            canId = int(string[1:9], 16)
-            dlc = int(string[9])
-            extended = True
-            data = bytearray.fromhex(string[10 : 10 + dlc * 2])
+            try:
+                # extended frame
+                canId = int(string[1:9], 16)
+                dlc = int(string[9])
+                extended = True
+                data = bytearray.fromhex(string[10 : 10 + dlc * 2])
+            except Exception as e:
+                logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e}")
+                data = None
         elif string[0] == "t":
-            # normal frame
-            canId = int(string[1:4], 16)
-            dlc = int(string[4])
-            data = bytearray.fromhex(string[5 : 5 + dlc * 2])
+            try:
+                # normal frame
+                canId = int(string[1:4], 16)
+                dlc = int(string[4])
+                data = bytearray.fromhex(string[5 : 5 + dlc * 2])
+            except Exception as e:
+                logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e}")
+                data = None
         elif string[0] == "r":
-            # remote frame
-            canId = int(string[1:4], 16)
-            dlc = int(string[4])
-            remote = True
+            try:
+                # remote frame
+                canId = int(string[1:4], 16)
+                dlc = int(string[4])
+                remote = True
+            except Exception as e:
+                logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e}")
+                data = None
         elif string[0] == "R":
-            # remote extended frame
-            canId = int(string[1:9], 16)
-            dlc = int(string[9])
-            extended = True
-            remote = True
+            try:
+                # remote extended frame
+                canId = int(string[1:9], 16)
+                dlc = int(string[9])
+                extended = True
+                remote = True
+            except Exception as e:
+                logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e}")
+                data = None
         elif string[0] == "d":
-            # FD standard frame
-            canId = int(string[1:4], 16)
-            dlc = int(string[4], 16)
-            isFd = True
-            data = bytearray.fromhex(string[5 : 5 + CAN_FD_DLC[dlc] * 2])
+            try:
+                # FD standard frame
+                canId = int(string[1:4], 16)
+                dlc = int(string[4], 16)
+                isFd = True
+                data = bytearray.fromhex(string[5 : 5 + CAN_FD_DLC[dlc] * 2])
+            except Exception as e:
+                if canId and dlc:
+                    logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e} [{string[5 : 5 + CAN_FD_DLC[dlc] * 2]}] ({canId:03X}:{CAN_FD_DLC[dlc]})")
+                else:
+                    logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e}")
+                data = None
         elif string[0] == "D":
-            # FD extended frame
-            canId = int(string[1:9], 16)
-            dlc = int(string[9], 16)
-            extended = True
-            isFd = True
-            data = bytearray.fromhex(string[10 : 10 + CAN_FD_DLC[dlc] * 2])
+            try:
+                # FD extended frame
+                canId = int(string[1:9], 16)
+                dlc = int(string[9], 16)
+                extended = True
+                isFd = True
+                data = bytearray.fromhex(string[10 : 10 + CAN_FD_DLC[dlc] * 2])
+            except Exception as e:
+                if canId and dlc:
+                    logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e} [{string[10 : 10 + CAN_FD_DLC[dlc] * 2]}] ({canId:08X}:{CAN_FD_DLC[dlc]})")
+                else:
+                    logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e}")
+                data = None
         elif string[0] == "b":
-            # FD with bitrate switch
-            canId = int(string[1:4], 16)
-            dlc = int(string[4], 16)
-            isFd = True
-            fdBrs = True
-            data = bytearray.fromhex(string[5 : 5 + CAN_FD_DLC[dlc] * 2])
+            try:
+                # FD with bitrate switch
+                canId = int(string[1:4], 16)
+                dlc = int(string[4], 16)
+                isFd = True
+                fdBrs = True
+                data = bytearray.fromhex(string[5 : 5 + CAN_FD_DLC[dlc] * 2])
+            except Exception as e:
+                if canId and dlc:
+                    logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e} [{string[5 : 5 + CAN_FD_DLC[dlc] * 2]}] ({canId:03X}:{CAN_FD_DLC[dlc]})")
+                else:
+                    logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e}")
+                data = None
         elif string[0] == "B":
-            # FD extended with bitrate switch
-            canId = int(string[1:9], 16)
-            dlc = int(string[9], 16)
-            extended = True
-            isFd = True
-            fdBrs = True
-            data = bytearray.fromhex(string[10 : 10 + CAN_FD_DLC[dlc] * 2])
+            try:
+                # FD extended with bitrate switch
+                canId = int(string[1:9], 16)
+                dlc = int(string[9], 16)
+                extended = True
+                isFd = True
+                fdBrs = True
+                data = bytearray.fromhex(string[10 : 10 + CAN_FD_DLC[dlc] * 2])
+            except Exception as e:
+                if canId and dlc:
+                    logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e} [{string[10 : 10 + CAN_FD_DLC[dlc] * 2]}] ({canId:08X}:{CAN_FD_DLC[dlc]})")
+                else:
+                    logging.error(f"Failed to decode message '{string.strip()}': {type(e).__name__}: {e}")
+                data = None
 
         if canId is not None:
             msg = Message(
