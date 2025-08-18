@@ -8,6 +8,7 @@ __all__ = [
     "BACKENDS",
     "VALID_INTERFACES",
     "canalystii",
+    "canbe",
     "cantact",
     "etas",
     "gs_usb",
@@ -57,6 +58,7 @@ BACKENDS: dict[str, tuple[str, str]] = {
     "neousys": ("can.interfaces.neousys", "NeousysBus"),
     "etas": ("can.interfaces.etas", "EtasBus"),
     "socketcand": ("can.interfaces.socketcand", "SocketCanDaemonBus"),
+    "canbe": ("can.interfaces.canbe", "canbeBus"),
 }
 
 
